@@ -7,9 +7,14 @@ const prevBtn = testimonial.querySelector('.prev');
 const nextBtn = testimonial.querySelector('.next');
 const blockquoteCount = blockquote.lingth;
 
-blockquote.forEach((item,i)=>{
-  item.style.left = i*100+'%';
-})
+function slideLayout(){
+  testimonialUl.style.width = testimonial.offsetWidth * blockquoteCount + 'px';
+}
+slideLayout();
+
+window.addEventListener('resize',()=>{
+  slideLayout();
+});
 
 moveSlide(0);
 
