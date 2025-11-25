@@ -8,8 +8,6 @@ const prevBtn = testimonial.querySelector('.prev');
 const nextBtn = testimonial.querySelector('.next');
 const blockquoteCount = blockquote.lingth;
 
-const q = document.querySelectorAll('.question');
-
 function slideLayout(){
   testimonialUl.style.width = testimonial.offsetWidth * blockquoteCount + 'px';
 }
@@ -62,6 +60,7 @@ for(let q of qs){
   q.addEventListener('click',()=>{
     for(let q of qs){
       q.classList.remove('active');
-    }    
+    }
+    q.classList.add('active');
   });
 }
