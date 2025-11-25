@@ -1,4 +1,5 @@
 const btt = document.querySelector('#btt');
+
 const testimonial = document.querySelector('.testimonial');
 const testimonialUl = testimonial.querySelector('.testimonial ul');
 const testimonialUlBlockquote = testimonialUl.querySelector('.testimonial ul blockquote');
@@ -6,6 +7,8 @@ let currentIdx = 0;
 const prevBtn = testimonial.querySelector('.prev');
 const nextBtn = testimonial.querySelector('.next');
 const blockquoteCount = blockquote.lingth;
+
+const q = document.querySelectorAll('.question');
 
 function slideLayout(){
   testimonialUl.style.width = testimonial.offsetWidth * blockquoteCount + 'px';
@@ -53,3 +56,11 @@ btt.addEventListener('click',(e)=>{
     behavior:'smooth'
   });
 });
+
+for(let q of q){
+  q.addEventListener('click',()=>{
+    for(){
+      q.classList.remove('active');
+    }    
+  });  
+}
