@@ -57,10 +57,11 @@ btt.addEventListener('click',(e)=>{
   });
 });
 
-for(let q of q){
+const qs = document.querySelectorAll('.question');
+for(let q of qs){
   q.addEventListener('click',()=>{
-    for(){
+    for(let q of qs){
       q.classList.remove('active');
     }    
-  });  
+  });
 }
