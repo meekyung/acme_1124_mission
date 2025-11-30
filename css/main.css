@@ -149,83 +149,55 @@ footer p:first-child{
     margin-bottom: 27px;
 }
 /* POPUP */
-#popup{
+.popup {
   position: fixed;
-  left: 100px;
-  top:100px;
-  border: 1px solid #ccc;
-  width: 380px;
-  background: #fff;
-  box-shadow: 2px 2px 5px rgba(0,0,0,.4);
-  border-radius: 20px;
-  padding: 20px;
-  display: none;
-  z-index: 999999;
-  border: 2px solid var(--primary);
-}
-#popup h2{
-  text-align: center;
-  margin-bottom: 24px;
-  
-}
-#popup h3{
-  font-size: 20px;
-  font-weight: 700;
-  
-  
-}
-#popup h2 img{
-  display:inline-block ;
-  width: 50px;
-  text-align: center;
-  
-}
-#popup p{
-  line-height: var(--lh);
-  margin: 12px 0;
-  
-}
-#popup p strong{
-  font-weight: 700;
-}
-
-#popup strong{
-  font-weight: 700;
-}
-
-#popup button{
-  font-size: 20px;
-  cursor: pointer;
-  transition: 0.3s;
-  line-height: 20px;
-}
-#popup button:hover{
-  rotate: 180deg;
-  color: var(--primary);
-}
-
-#popup.active{
-  display: block;
-}
-#popup h4{
-  font-weight: 700;
-  margin-bottom: 12px;
-}
-
-#popup div{
+  inset: 0;               /* top:0; right:0; bottom:0; left:0; 와 동일 */
   display: flex;
-  justify-content: flex-end;
-  align-items:center;
-  line-height: 20px;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.6);
+  z-index: 9999;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-#popup div input{
-  width: 17px;
-  height: 17px;
+/* 팝업 내용 박스 */
+.popup-inner {
+  background: #fff;
+  padding: 24px 32px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+  border-radius: 8px;
+  box-sizing: border-box;
 }
 
-#popup div label{
-  margin-right: 20px;
+/* 하단 버튼 영역 */
+.popup-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+/* 오늘 안보기 / 닫기 버튼 공통 스타일 */
+.btn-popup-today,
+.btn-popup-close {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background: #f7f7f7;
+  cursor: pointer;
+}
+
+/* 숨김 처리용 클래스 */
+.popup.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 

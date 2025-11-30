@@ -65,89 +65,62 @@ for(let q of qs){
   });
 }
 
-// 팝업 레이어
+// POPUP
 
+document.addEventListener('DOMContentLoaded', function () {
+    const popup       = document.getElementById('mainPopup');
+    const btnToday    = document.querySelector('.btn-popup-today');
+    const btnClose    = document.querySelector('.btn-popup-close');
+    const STORAGE_KEY = 'hideMainPopupUntil';
 
-const mypopup =document.querySelector('#popup');
-const popupCloseBtn =mypopup.querySelector('button');
-const onDayCheck = mypopup.querySelector('input');
+    if (!popup) return; // 팝업이 없으면 아무것도 안 함
 
+    // 오늘 날짜 문자열(YYYY-MM-DD) 생성
+    function getToday() {
+      const d = new Date();
+      const year  = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const date  = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${date}`;
+    }
 
+    // 내일 0시 기준으로 숨김 만료 날짜를 저장 (원하시면 +1일 → +N일로 바꿔도 됨)
+    function setHideUntilTomorrow() {
+      const t = new Date();
+      t.setDate(t.getDate() + 1);
+      const year  = t.getFullYear();
+      const month = String(t.getMonth() + 1).padStart(2, '0');
+      const date  = String(t.getDate()).padStart(2, '0');
+      const hideUntil = `${year}-${month}-${date}`;
+      localStorage.setItem(STORAGE_KEY, hideUntil);
+    }
 
-function setCookie(name, value, day){
+    // 페이지 로드 시, localStorage 값 체크
+    (function initPopup() {
+      const today     = getToday();
+      const hideUntil = localStorage.getItem(STORAGE_KEY);
 
-  let date = new Date(); //현재의 시간 생성
-  date.setDate(date.getDate()+day);  // 하루 뒤 시간을 생성
+      if (hideUntil && hideUntil >= today) {
+        // 아직 숨김 기간이 남아 있으면 팝업 안 보이게
+        popup.classList.add('is-hidden');
+      } else {
+        // 숨김 기간이 지났거나 없으면 팝업 보여줌
+        popup.classList.remove('is-hidden');
+      }
+    })();
 
+    // 오늘 하루 안보기 버튼
+    if (btnToday) {
+      btnToday.addEventListener('click', function () {
+        setHideUntilTomorrow();
+        popup.classList.add('is-hidden');
+      });
+    }
 
-    
-    
-  let myCookie = '';
-  myCookie += `${name}=${value};`;
-  myCookie += `expires=${date.toUTCString()};`;  //템플릿 리터럿 백팁
-
-  document.cookie = myCookie;  
-};
-
-function checkCookie(name){
-  let currentCookies = document.cookie; // 문자열로 존재
-  let isPopupShow = (currentCookies.search(name)> -1)? false : true ;
- 
-
-  //  if(isPopupShow){
-  //   mypopup.classList.add('active');
-  //  }else{
-  //   mypopup.classList.remove('active');
-  //  }
-
-  (isPopupShow)? mypopup.classList.add('active') : mypopup.classList.remove('active');
-
-  /*
-   currentCookies이 name이 확인하고 있다면,
-   isPopupShow를 false로 변경
-   없다면 true로 변경
-  */
-}
-checkCookie('popup');
-// setCookie('popup','yes',1);
-//팝업띄우기 첫방문일때
-//하루 안보이기 체크 닫기 >> 팝업 x
-
-/*
-순서 
-
-첫방문일때 > 팝업 o (쿠키가 없을때)
-
-하루 안보기 체크v 닫기  > 쿠키생성(popup-=o) >  팝업 x
-
-하루 안보기 체크x 닫기  > 기존에 있던 팝업을 지워야함  > 팝업 o
-
-*/
-function deleteCookie(name){
-  let date = new Date(); //현재의 시간 생성
-  
-  date.setDate(date.getDate()-1);  // 과거로 시간을 설정
-  
-  let myCookie = '';
-  myCookie += `${name}=yes;`;
-  myCookie += `expires=${date.toUTCString()};`;  //템플릿 리터럿 백팁
-  document.cookie = myCookie;  
-}
-
-
-
-// 닫기 버튼을 클릭하면 할일
-// ondDaycheck 값이 true와 같다면   -- 쿠키 생성
-// 아니라면  -- 쿠키제거 
-popupCloseBtn.addEventListener('click',()=>{
-
-  if(onDayCheck.checked){
-    setCookie('popup', 'no', 1)
-    mypopup.classList.remove('active');
-  }else{
-    deleteCookie('popup');
-    mypopup.classList.remove('active');
-  }
-
-
-});
+    // 단순 닫기 버튼 (오늘 안보기와 별개)
+    if (btnClose) {
+      btnClose.addEventListener('click', function () {
+        popup.classList.add('is-hidden');
+      });
+    }
+  });
