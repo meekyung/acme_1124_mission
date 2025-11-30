@@ -149,52 +149,59 @@ footer p:first-child{
     margin-bottom: 27px;
 }
 /* POPUP */
-.popup {
+.popup-wrap {
   position: fixed;
-  inset: 0;               /* top:0; right:0; bottom:0; left:0; 와 동일 */
+  inset: 0; /* top:0; right:0; bottom:0; left:0; */
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0,0,0,0.6);
+  background-color: rgba(0, 0, 0, 0.6);
   z-index: 9999;
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
 }
 
-/* 팝업 내용 박스 */
-.popup-inner {
-  background: #fff;
-  padding: 24px 32px;
-  max-width: 400px;
+/* 실제 팝업 박스 */
+.popup-box {
+  max-width: 420px;
   width: 90%;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+  padding: 24px 28px;
+  background-color: #fff;
   border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
   box-sizing: border-box;
 }
 
-/* 하단 버튼 영역 */
+/* 버튼 영역 */
 .popup-bottom {
   display: flex;
   justify-content: space-between;
   gap: 8px;
-  margin-top: 20px;
+  margin-top: 18px;
 }
 
-/* 오늘 안보기 / 닫기 버튼 공통 스타일 */
 .btn-popup-today,
 .btn-popup-close {
   flex: 1;
-  padding: 8px 12px;
-  font-size: 14px;
-  border-radius: 4px;
   border: 1px solid #ddd;
-  background: #f7f7f7;
+  border-radius: 4px;
+  padding: 8px 0;
+  font-size: 14px;
+  background-color: #f7f7f7;
   cursor: pointer;
 }
 
-/* 숨김 처리용 클래스 */
-.popup.is-hidden {
+/* --- 상태 제어용 클래스 --- */
+
+/* 팝업이 열려 있는 상태 */
+.popup-wrap.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 팝업이 완전히 숨겨진 상태 */
+.popup-wrap.is-hidden {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;

@@ -1,40 +1,50 @@
 const btt = document.querySelector('#btt');
 
-const testimonial = document.querySelector('.testimonial');
-const testimonialUl = testimonial.querySelector('.testimonial ul');
-const testimonialUlBlockquote = testimonialUl.querySelector('.testimonial ul blockquote');
-let currentIdx = 0;
-const prevBtn = testimonial.querySelector('.prev');
-const nextBtn = testimonial.querySelector('.next');
-const blockquoteCount = blockquote.lingth;
+document.addEventListener('DOMContentLoaded', function () {
+  const testimonial = document.querySelector('.testimonial');
+  if (!testimonial) return;
 
-function slideLayout(){
-  testimonialUl.style.width = testimonial.offsetWidth * blockquoteCount + 'px';
-}
-slideLayout();
+  // 슬라이드 트랙과 슬라이드들
+  const track   = testimonial.querySelector('ul');
+  const slides  = testimonial.querySelectorAll('ul > li');
+  const prevBtn = testimonial.querySelector('.prev');
+  const nextBtn = testimonial.querySelector('.next');
 
-window.addEventListener('resize',()=>{
-  slideLayout();
-});
+  const total   = slides.length;
+  let currentIdx = 0;
 
-moveSlide(0);
+  if (!track || total === 0) return;
 
-function moveSlide(idx){
-  testimonialUl.style.left = -idx*100+'%';
-  currentIdx = idx;
-  for(let blockquote of blockquote){
-    blockquote.classList.remove('active');
+  // 현재 인덱스의 슬라이드로 이동
+  function goToSlide(index) {
+    currentIdx = index;
+    // ul을 왼쪽으로 100%씩 이동
+    track.style.transform = `translateX(-${index * 100}%)`;
+
+    // active 클래스 관리 (스타일 강조용)
+    slides.forEach((li, i) => {
+      li.classList.toggle('active', i === index);
+    });
   }
-  blockquote[idx].classList.add('active');
-}
 
-nextBtn.addEventListener('click',()=>{
-  let nextIdx = (currentIdx + 1)%blockquoteCount;
-    moveSlide(nextIdx);
-});
-prevBtn.addEventListener('click',()=>{
-  let nextIdx = (currentIdx - 1 + 1)%blockquoteCount;
-    moveSlide(nextIdx);
+  // 다음 버튼
+  if (nextBtn) {
+    nextBtn.addEventListener('click', function () {
+      const nextIndex = (currentIdx + 1) % total;
+      goToSlide(nextIndex);
+    });
+  }
+
+  // 이전 버튼
+  if (prevBtn) {
+    prevBtn.addEventListener('click', function () {
+      const prevIndex = (currentIdx - 1 + total) % total;
+      goToSlide(prevIndex);
+    });
+  }
+
+  // 초기 상태 – 첫 번째 슬라이드 활성화
+  goToSlide(0);
 });
 
 window.scrollTo(0, 100);
@@ -68,44 +78,49 @@ for(let q of qs){
 // POPUP
 
 document.addEventListener('DOMContentLoaded', function () {
-    const popup       = document.getElementById('mainPopup');
-    const btnToday    = document.querySelector('.btn-popup-today');
-    const btnClose    = document.querySelector('.btn-popup-close');
-    const STORAGE_KEY = 'hideMainPopupUntil';
+    const popup    = document.getElementById('mainPopup');
+    const btnToday = document.querySelector('.btn-popup-today');
+    const btnClose = document.querySelector('.btn-popup-close');
 
-    if (!popup) return; // 팝업이 없으면 아무것도 안 함
+    // 팝업 요소 자체가 없으면 종료
+    if (!popup) return;
 
-    // 오늘 날짜 문자열(YYYY-MM-DD) 생성
-    function getToday() {
-      const d = new Date();
-      const year  = d.getFullYear();
-      const month = String(d.getMonth() + 1).padStart(2, '0');
-      const date  = String(d.getDate()).padStart(2, '0');
-      return `${year}-${month}-${date}`;
+    // 로컬스토리지 key 이름(원하는대로 바꿔도 됨)
+    const STORAGE_KEY = 'acmeMainPopupHideUntil';
+
+    // YYYY-MM-DD 문자열로 오늘 날짜 구하기
+    function getDateString(dateObj) {
+      const y = dateObj.getFullYear();
+      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const d = String(dateObj.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
     }
 
-    // 내일 0시 기준으로 숨김 만료 날짜를 저장 (원하시면 +1일 → +N일로 바꿔도 됨)
+    function getToday() {
+      return getDateString(new Date());
+    }
+
+    // 내일 0시 기준으로 숨김 만료일 저장
     function setHideUntilTomorrow() {
       const t = new Date();
-      t.setDate(t.getDate() + 1);
-      const year  = t.getFullYear();
-      const month = String(t.getMonth() + 1).padStart(2, '0');
-      const date  = String(t.getDate()).padStart(2, '0');
-      const hideUntil = `${year}-${month}-${date}`;
+      t.setDate(t.getDate() + 1); // +1일
+      const hideUntil = getDateString(t);
       localStorage.setItem(STORAGE_KEY, hideUntil);
     }
 
-    // 페이지 로드 시, localStorage 값 체크
+    // 초기 노출 여부 설정
     (function initPopup() {
       const today     = getToday();
       const hideUntil = localStorage.getItem(STORAGE_KEY);
 
       if (hideUntil && hideUntil >= today) {
-        // 아직 숨김 기간이 남아 있으면 팝업 안 보이게
+        // 아직 숨기기로 한 기한이 남아있으면: 안 보이게
+        popup.classList.remove('is-open');
         popup.classList.add('is-hidden');
       } else {
-        // 숨김 기간이 지났거나 없으면 팝업 보여줌
+        // 보여줘야 할 때
         popup.classList.remove('is-hidden');
+        popup.classList.add('is-open');
       }
     })();
 
@@ -113,13 +128,15 @@ document.addEventListener('DOMContentLoaded', function () {
     if (btnToday) {
       btnToday.addEventListener('click', function () {
         setHideUntilTomorrow();
+        popup.classList.remove('is-open');
         popup.classList.add('is-hidden');
       });
     }
 
-    // 단순 닫기 버튼 (오늘 안보기와 별개)
+    // 닫기 버튼
     if (btnClose) {
       btnClose.addEventListener('click', function () {
+        popup.classList.remove('is-open');
         popup.classList.add('is-hidden');
       });
     }
